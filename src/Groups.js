@@ -1,29 +1,13 @@
-// import { useEffect, useState } from "react/cjs/react.development";
 import { Button } from "react-bootstrap";
-// import { useState, useEffect } from "react/cjs/react.development";
 import CreateGroup from "./CreateGroup";
 
 function Groups({ groups, setID, onAddGroup }) {
-  function handleID(e) {
-    setID(e.target.value);
-  }
-
-  // const [groups, setGroups] = useState([]);
-
-  // useEffect(() => {
-  //   fetch(`http://localhost:9292/groups`)
-  //     .then((r) => r.json())
-  //     .then((data) => {
-  //       setGroups(data);
-  //     });
-  // }, []);
-
   const groupButtons = groups.map((group) => (
     <Button
       key={group.id}
       value={group.id}
       onClick={(e) => {
-        handleID(e);
+        setID(e.target.value);
       }}
     >
       {group.name} {group.bicon}

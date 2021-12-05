@@ -256,6 +256,19 @@ textarea {
   display: flex;
 }
 
+button {
+  cursor: pointer;
+}
+select {
+  cursor: pointer;
+}
+select text {
+  cursor: pointer;
+}
+input[type="date"] {
+  cursor: text;
+}
+
 /* form {
   display: flex;
   flex-direction: row;

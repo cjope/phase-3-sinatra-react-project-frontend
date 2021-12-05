@@ -15,7 +15,12 @@ function CreateTask({ onAddTask, ID }) {
       <div className="create-task-div">
         {isCreateTask ? (
           <div className="form-task">
-            <TaskForm onAddTask={onAddTask} ID={ID} />
+            <TaskForm
+              onAddTask={onAddTask}
+              ID={ID}
+              isCreateTask={setIsCreateTask}
+              setIsCreateTask={setIsCreateTask}
+            />
           </div>
         ) : null}
       </div>

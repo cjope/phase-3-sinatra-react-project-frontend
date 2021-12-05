@@ -9,8 +9,6 @@ function CreateGroup({ onAddGroup }) {
     setIsCreateGroup(!isCreateGroup);
   }
 
-  // console.log(isCreateGroup);
-
   return (
     <div className="create-group">
       <button onClick={handleCreateGroup}>CreateGroup</button>

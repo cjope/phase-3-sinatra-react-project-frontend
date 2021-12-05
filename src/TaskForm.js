@@ -1,8 +1,10 @@
 import { useState } from "react/cjs/react.development";
 
-function TaskForm({ onAddTask, ID }) {
+function TaskForm({ onAddTask, ID, isCreateTask, setIsCreateTask }) {
   const [body, setBody] = useState("");
-  const [due, setDue] = useState("");
+  const [due, setDue] = useState(new Date());
+
+  // console.log(due);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -24,18 +26,12 @@ function TaskForm({ onAddTask, ID }) {
         onAddTask(newTask);
         setBody("");
         setDue("");
-        console.log(newTask);
+        setIsCreateTask(!isCreateTask);
       });
   }
 
-  // console.log(`body: ${body}`);
-  // console.log(`date: ${due}`);
-  // console.log(`newDate: ${new Date(due).toJSON()}`);
-  // console.log(`group_id: ${ID}`);
-
   return (
     <form onSubmit={handleSubmit}>
-      {/* <span> */}
       <textarea
         className="task-text"
         onChange={(e) => setBody(e.target.value)}
@@ -49,7 +45,6 @@ function TaskForm({ onAddTask, ID }) {
           type="date"
           value={due}
         />
-        {/* </span> */}
         <button type="submit">Save</button>
       </div>
     </form>
