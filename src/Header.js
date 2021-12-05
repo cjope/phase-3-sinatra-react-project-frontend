@@ -6,7 +6,7 @@ function Header({ activeGroup }) {
       </div>
       <span className="header-group">
         <h1>{activeGroup.name}</h1>
-        <p className="icon">{activeGroup.bicon}</p>
+        <p className="icon">{activeGroup.emoji}</p>
       </span>
     </div>
   );

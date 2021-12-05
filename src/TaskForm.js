@@ -14,7 +14,6 @@ function TaskForm({ onAddTask, ID, isCreateTask, setIsCreateTask }) {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-
       body: JSON.stringify({
         body: body,
         due: new Date(due).toJSON(),
@@ -28,6 +27,11 @@ function TaskForm({ onAddTask, ID, isCreateTask, setIsCreateTask }) {
         setDue("");
         setIsCreateTask(!isCreateTask);
       });
+  }
+
+  function handleCancel(e) {
+    e.preventDefault();
+    setIsCreateTask(!isCreateTask);
   }
 
   return (
@@ -46,6 +50,7 @@ function TaskForm({ onAddTask, ID, isCreateTask, setIsCreateTask }) {
           value={due}
         />
         <button type="submit">Save</button>
+        <button onClick={handleCancel}>Cancel</button>
       </div>
     </form>
   );

@@ -10,7 +10,7 @@ function Groups({ groups, setID, onAddGroup }) {
         setID(e.target.value);
       }}
     >
-      {group.name} {group.bicon}
+      {group.name} {group.emoji}
     </Button>
   ));
 

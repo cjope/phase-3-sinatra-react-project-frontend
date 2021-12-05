@@ -73,7 +73,13 @@
 
 .form-inputs {
   display: flex;
+  flex-direction: column;
   align-items: center;
+}
+
+.group-form-buttons {
+  display: flex;
+  flex-direction: row;
 }
 
 .task-body {
@@ -193,6 +199,10 @@ p {
 }
 
 .icon-select {
+  display: flex;
+}
+
+.group-form-name-emoji {
   display: flex;
 }
 

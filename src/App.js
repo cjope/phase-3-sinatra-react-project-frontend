@@ -11,8 +11,6 @@ function App() {
   const [activeGroup, setActiveGroup] = useState([]);
   const [activeTasks, setActiveTasks] = useState([]);
 
-  // setActiveGroup([]);
-
   useEffect(() => {
     fetch(`http://localhost:9292/groups`)
       .then((r) => r.json())
@@ -32,6 +30,7 @@ function App() {
 
   function handleNewGroup(newGroup) {
     setGroups([...groups, newGroup]);
+    setActiveGroup(newGroup);
   }
 
   function handleNewTask(newTask) {

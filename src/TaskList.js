@@ -20,6 +20,7 @@ function TaskList({ search, tasks, ID, onAddTask, onTaskDelete }) {
     setEditTaskID(e.target.value);
   }
 
+  //make this it's own component - jeez!
   function handleEditTask(e) {
     e.preventDefault();
     console.log(
@@ -53,8 +54,6 @@ function TaskList({ search, tasks, ID, onAddTask, onTaskDelete }) {
       timeZone: "GMT",
     });
 
-    // console.log(modTask);
-    // console.log(editTaskID);
     return (
       <div className="list-tasks" key={task.id}>
         {`Due in ${dateDiff} days`}

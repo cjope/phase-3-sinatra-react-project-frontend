@@ -6,19 +6,23 @@ function CreateGroup({ onAddGroup }) {
 
   function handleCreateGroup() {
     setIsCreateGroup(!isCreateGroup);
-    setIsCreateGroup(!isCreateGroup);
   }
 
   return (
     <div className="create-group">
-      <button onClick={handleCreateGroup}>CreateGroup</button>
-      <div className="form-group">
-        {isCreateGroup ? (
+      {!isCreateGroup ? (
+        <button onClick={handleCreateGroup}>CreateGroup</button>
+      ) : (
+        <div className="form-group">
           <div>
-            <GroupForm onAddGroup={onAddGroup} />
+            <h2>Create Group:</h2>
+            <GroupForm
+              onCancelGroup={handleCreateGroup}
+              onAddGroup={onAddGroup}
+            />
           </div>
-        ) : null}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
