@@ -1,15 +1,7 @@
 import { useState } from "react";
 import CreateTask from "./CreateTask";
 
-function TaskList({
-  search,
-  tasks,
-  ID,
-  onAddTask,
-  onTaskDelete,
-  activeTasks,
-  setID,
-}) {
+function TaskList({ search, tasks, ID, onAddTask, onTaskDelete, setID }) {
   const [isEdit, setIsEdit] = useState(false);
   const [modTask, setModTask] = useState("");
   const [editTaskID, setEditTaskID] = useState("");
@@ -42,10 +34,6 @@ function TaskList({
     })
       .then((r) => r.json())
       .then((updatedTask) => {
-        console.log(updatedTask);
-        // need a handle tasks here to update page
-        // handleUpdateTasks(updatedTask)
-        // setActiveTasks(tasks);
         setID(updatedTask.group_id);
         setIsEdit(!isEdit);
       });

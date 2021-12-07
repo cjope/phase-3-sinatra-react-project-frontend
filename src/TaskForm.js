@@ -4,8 +4,6 @@ function TaskForm({ onAddTask, ID, isCreateTask, setIsCreateTask }) {
   const [body, setBody] = useState("");
   const [due, setDue] = useState(new Date());
 
-  // console.log(due);
-
   function handleSubmit(e) {
     e.preventDefault();
     fetch(`http://localhost:9292/tasks`, {
