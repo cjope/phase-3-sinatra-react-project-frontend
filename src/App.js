@@ -10,20 +10,30 @@ function App() {
   const [search, setSearch] = useState("");
   const [activeGroup, setActiveGroup] = useState([]);
   const [activeTasks, setActiveTasks] = useState([]);
+  const [currentUserID, setCurrentUserID] = useState(1);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:9292/groups`)
+    fetch(`http://localhost:9292/users`)
+      .then((r) => r.json())
+      .then((data) => setUsers(data));
+  }, []);
+
+  useEffect(() => {
+    fetch(`http://localhost:9292/users/${currentUserID}`)
       .then((r) => r.json())
       .then((data) => {
-        setGroups(data);
+        setActiveGroup(data.groups);
+        setGroups(data.groups);
+        const firstGroup = data.groups[0].id;
+        setID(firstGroup);
       });
-  }, []);
+  }, [currentUserID]);
 
   useEffect(() => {
     fetch(`http://localhost:9292/groups/${ID}`)
       .then((r) => r.json())
       .then((data) => {
-        setActiveGroup(data);
         setActiveTasks(data.tasks);
       });
   }, [ID]);
@@ -43,9 +53,20 @@ function App() {
     setID(activeTasks[0].group_id);
   }
 
+  const userName = users.map((user) => (
+    <option value={user.id} key={user.id}>
+      {user.name}
+    </option>
+  ));
+
+  function handleSetUser(e) {
+    setCurrentUserID(e.target.value);
+  }
+
   return (
     <div className="App">
       <Header activeGroup={activeGroup} />
+      <select onChange={handleSetUser}>{userName}</select>
       <form>
         <input
           className="search"
@@ -69,8 +90,10 @@ function App() {
           activeGroup={activeGroup}
           tasks={activeTasks}
           onAddTask={handleNewTask}
+          setID={setID}
           ID={ID}
           onTaskDelete={handleDeleteTask}
+          setActiveTasks={setActiveTasks}
         />
       </div>
     </div>

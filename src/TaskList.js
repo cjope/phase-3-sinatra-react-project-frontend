@@ -1,7 +1,15 @@
 import { useState } from "react";
 import CreateTask from "./CreateTask";
 
-function TaskList({ search, tasks, ID, onAddTask, onTaskDelete }) {
+function TaskList({
+  search,
+  tasks,
+  ID,
+  onAddTask,
+  onTaskDelete,
+  activeTasks,
+  setID,
+}) {
   const [isEdit, setIsEdit] = useState(false);
   const [modTask, setModTask] = useState("");
   const [editTaskID, setEditTaskID] = useState("");
@@ -22,11 +30,30 @@ function TaskList({ search, tasks, ID, onAddTask, onTaskDelete }) {
 
   function handleEditTask(e) {
     e.preventDefault();
-    console.log(
-      `fetch PATCH for tasks/${editTaskID} - change body to: "${modTask}"`
-    );
-    setIsEdit(!isEdit);
+    fetch(`http://localhost:9292/tasks/${editTaskID}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        body: modTask,
+      }),
+    })
+      .then((r) => r.json())
+      .then((updatedTask) => {
+        console.log(updatedTask);
+        // need a handle tasks here to update page
+        // handleUpdateTasks(updatedTask)
+        // setActiveTasks(tasks);
+        setID(updatedTask.group_id);
+        setIsEdit(!isEdit);
+      });
   }
+
+  // function handleUpdatedTasks(updatedTask){
+  //   const updatedTasks = tasks.filter
+  // }
 
   const displayTask = Object.values(tasks).filter((task) =>
     task.body.toLowerCase().includes(search.toLowerCase())
