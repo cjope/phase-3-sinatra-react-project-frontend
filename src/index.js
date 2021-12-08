@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import AppBackup from "./AppBackup";
+import App from "./App";
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppBackup />
+    <App />
   </React.StrictMode>,
   document.getElementById("root")
 );
