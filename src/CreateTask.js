@@ -1,6 +1,6 @@
 import { useState } from "react";
 import TaskForm from "./TaskForm";
-function CreateTask({ onAddTask, ID }) {
+function CreateTask({ onAddTask, ID, user, group }) {
   const [isCreateTask, setIsCreateTask] = useState(false);
 
   function handleCreateTask() {
@@ -24,6 +24,8 @@ function CreateTask({ onAddTask, ID }) {
                 ID={ID}
                 isCreateTask={setIsCreateTask}
                 setIsCreateTask={setIsCreateTask}
+                user={user}
+                group={group}
               />
             </div>
           </span>

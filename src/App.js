@@ -1,42 +1,55 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import Button from "@restart/ui/esm/Button";
+import { useState } from "react/cjs/react.development";
 import Groups from "./Groups";
 import Header from "./Header";
 import TaskList from "./TaskList";
+import "./App.css";
 
 function App() {
+  const [tasks, setTasks] = useState([]);
   const [groups, setGroups] = useState([]);
-  const [ID, setID] = useState(1);
-  const [search, setSearch] = useState("");
-  const [activeGroup, setActiveGroup] = useState([]);
-  const [activeTasks, setActiveTasks] = useState([]);
-  const [currentUserID, setCurrentUserID] = useState(1);
   const [users, setUsers] = useState([]);
+  const [activeUser, setActiveUser] = useState(1);
+  const [activeGroup, setActiveGroup] = useState(1);
+  const [search, setSearch] = useState("");
 
-  useEffect(() => {
+  useState(() => {
     fetch(`http://localhost:9292/users`)
       .then((r) => r.json())
       .then((data) => setUsers(data));
   }, []);
 
-  useEffect(() => {
-    fetch(`http://localhost:9292/users/${currentUserID}`)
+  useState(() => {
+    fetch(`http://localhost:9292/groups`)
       .then((r) => r.json())
-      .then((data) => {
-        setActiveGroup(data.groups);
-        setGroups(data.groups);
-        const firstGroup = data.groups[0].id;
-        setID(firstGroup);
-      });
-  }, [currentUserID]);
+      .then((data) => setGroups(data));
+  }, []);
 
-  useEffect(() => {
-    fetch(`http://localhost:9292/groups/${ID}`)
+  useState(() => {
+    fetch(`http://localhost:9292/tasks`)
       .then((r) => r.json())
-      .then((data) => {
-        setActiveTasks(data.tasks);
-      });
-  }, [ID]);
+      .then((data) => setTasks(data));
+  }, []);
+
+  const listUsers = users.map((user) => (
+    <Button
+      onClick={(e) => setActiveUser(user.id)}
+      value={user.id}
+      key={user.id}
+    >
+      {user.name}
+    </Button>
+  ));
+
+  function handleDeleteTask(id) {
+    const updatedTasks = tasks.filter((task) => task.id !== id);
+    setTasks(updatedTasks);
+    console.log(tasks[0].user_id);
+    setActiveUser(tasks[0].user_id);
+    //no update on refresh
+  }
+
+  console.log(activeUser);
 
   function handleNewGroup(newGroup) {
     setGroups([...groups, newGroup]);
@@ -44,29 +57,18 @@ function App() {
   }
 
   function handleNewTask(newTask) {
-    setActiveTasks([...activeTasks, newTask]);
+    setTasks([...tasks, newTask]);
   }
 
-  function handleDeleteTask(id) {
-    const updatedTasks = activeGroup.tasks.filter((task) => task.id !== id);
-    setActiveTasks(updatedTasks);
-    setID(activeTasks[0].group_id);
-  }
-
-  const userName = users.map((user) => (
-    <option value={user.id} key={user.id}>
-      {user.name}
-    </option>
-  ));
-
-  function handleSetUser(e) {
-    setCurrentUserID(e.target.value);
+  function handleUpdateTask(updatedtasks) {
+    setTasks(updatedtasks);
+    //no update on refresh - sets
   }
 
   return (
     <div className="App">
-      <Header activeGroup={activeGroup} />
-      <select onChange={handleSetUser}>{userName}</select>
+      <Header group={activeGroup} />
+
       <form>
         <input
           className="search"
@@ -78,26 +80,24 @@ function App() {
       </form>
       <div className="body">
         <Groups
-          search={search}
-          setID={setID}
           groups={groups}
-          setGroups={setGroups}
+          setActiveGroup={setActiveGroup}
           onAddGroup={handleNewGroup}
         />
+
         <TaskList
+          tasks={tasks}
+          user={activeUser}
+          group={activeGroup}
           search={search}
-          setSearch={setSearch}
-          activeGroup={activeGroup}
-          tasks={activeTasks}
           onAddTask={handleNewTask}
-          setID={setID}
-          ID={ID}
+          setID={setActiveUser}
           onTaskDelete={handleDeleteTask}
-          setActiveTasks={setActiveTasks}
+          onUpdateTask={handleUpdateTask}
         />
       </div>
+      {listUsers}
     </div>
   );
 }
-
 export default App;
