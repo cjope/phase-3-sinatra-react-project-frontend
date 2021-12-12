@@ -1,5 +1,5 @@
 import Button from "@restart/ui/esm/Button";
-import { useState } from "react/cjs/react.development";
+import { useEffect, useState } from "react/cjs/react.development";
 import Groups from "./Groups";
 import Header from "./Header";
 import TaskList from "./TaskList";
@@ -12,6 +12,7 @@ function App() {
   const [activeUser, setActiveUser] = useState(1);
   const [activeGroup, setActiveGroup] = useState(1);
   const [search, setSearch] = useState("");
+  const [header, setHeader] = useState([]);
 
   useState(() => {
     fetch(`http://localhost:9292/users`)
@@ -19,21 +20,25 @@ function App() {
       .then((data) => setUsers(data));
   }, []);
 
+  useEffect(() => {
+    fetch(`http://localhost:9292/users/${activeUser}/${activeGroup}`)
+      .then((r) => r.json())
+      .then((data) => setTasks(data));
+  }, [activeGroup, activeUser]);
+
   useState(() => {
     fetch(`http://localhost:9292/groups`)
       .then((r) => r.json())
       .then((data) => setGroups(data));
   }, []);
 
-  useState(() => {
-    fetch(`http://localhost:9292/tasks`)
-      .then((r) => r.json())
-      .then((data) => setTasks(data));
-  }, []);
+  function handleUserSelect(user) {
+    setActiveUser(user);
+  }
 
-  const listUsers = users.map((user) => (
+  const selectUser = users.map((user) => (
     <Button
-      onClick={(e) => setActiveUser(user.id)}
+      onClick={(e) => handleUserSelect(user.id)}
       value={user.id}
       key={user.id}
     >
@@ -42,14 +47,10 @@ function App() {
   ));
 
   function handleDeleteTask(id) {
-    const updatedTasks = tasks.filter((task) => task.id !== id);
+    // eslint-disable-next-line
+    const updatedTasks = tasks.filter((task) => task.id != id); //only works with double equality comparrison
     setTasks(updatedTasks);
-    console.log(tasks[0].user_id);
-    setActiveUser(tasks[0].user_id);
-    //no update on refresh
   }
-
-  console.log(activeUser);
 
   function handleNewGroup(newGroup) {
     setGroups([...groups, newGroup]);
@@ -61,14 +62,13 @@ function App() {
   }
 
   function handleUpdateTask(updatedtasks) {
-    setTasks(updatedtasks);
-    //no update on refresh - sets
+    setActiveUser([updatedtasks.user_id]);
   }
 
   return (
     <div className="App">
-      <Header group={activeGroup} />
-
+      <Header group={activeGroup} header={header} />
+      <div className="users">{selectUser}</div>
       <form>
         <input
           className="search"
@@ -83,6 +83,7 @@ function App() {
           groups={groups}
           setActiveGroup={setActiveGroup}
           onAddGroup={handleNewGroup}
+          setHeader={setHeader}
         />
 
         <TaskList
@@ -96,7 +97,6 @@ function App() {
           onUpdateTask={handleUpdateTask}
         />
       </div>
-      {listUsers}
     </div>
   );
 }

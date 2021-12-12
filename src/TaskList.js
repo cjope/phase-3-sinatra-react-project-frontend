@@ -9,6 +9,7 @@ function TaskList({
   onAddTask,
   setID,
   onTaskDelete,
+  onUpdateTask,
 }) {
   const [isEdit, setIsEdit] = useState(false);
   const [modTask, setModTask] = useState("");
@@ -29,6 +30,9 @@ function TaskList({
     setEditTaskID(e.target.value);
   }
 
+  console.log(editTaskID);
+  console.log(modTask);
+
   function handleEditTask(e) {
     e.preventDefault();
     fetch(`http://localhost:9292/tasks/${editTaskID}`, {
@@ -43,8 +47,8 @@ function TaskList({
     })
       .then((r) => r.json())
       .then((updatedTask) => {
-        setID(updatedTask.user_id);
         setIsEdit(!isEdit);
+        onUpdateTask(updatedTask);
       });
   }
 
@@ -52,61 +56,58 @@ function TaskList({
     task.body.toLowerCase().includes(search.toLowerCase())
   );
 
-  const userTasks = displayTask
-    .filter((task) => task.user_id === user && task.group_id === group.id)
-    .map((task) => {
-      const dueDate = new Date(task.due).toLocaleDateString("en", {
-        timeZone: "GMT",
-      });
-
-      const dateDiff = Math.round(
-        (new Date(dueDate).getTime() - new Date().getTime()) /
-          (1000 * 3600 * 24)
-      );
-
-      const weekDay = new Date(task.due).toLocaleDateString("en", {
-        weekday: "long",
-        timeZone: "GMT",
-      });
-
-      const shortDate = new Date(task.due).toLocaleDateString("en", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-        timeZone: "GMT",
-      });
-
-      return (
-        <div className="list-tasks" key={task.id}>
-          {dateDiff < 0 ? `Overdue!` : `Due in ${dateDiff} days`}
-          <small>
-            {weekDay} {shortDate}
-          </small>
-          <div className="task-body">
-            {isEdit ? (
-              <form onSubmit={handleEditTask}>
-                <input
-                  placeholder={task.body}
-                  onChange={(e) => setModTask(e.target.value)}
-                ></input>
-                <button type="submit">Save</button>
-              </form>
-            ) : (
-              <p>{task.body}</p>
-            )}
-
-            <span>
-              <button value={task.id} onClick={handleDeleteClick}>
-                🗑️
-              </button>
-              <button value={task.id} onClick={handleEditMode}>
-                ✏️
-              </button>
-            </span>
-          </div>
-        </div>
-      );
+  const userTasks = displayTask.map((task) => {
+    const dueDate = new Date(task.due).toLocaleDateString("en", {
+      timeZone: "GMT",
     });
+
+    const dateDiff = Math.round(
+      (new Date(dueDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24)
+    );
+
+    const weekDay = new Date(task.due).toLocaleDateString("en", {
+      weekday: "long",
+      timeZone: "GMT",
+    });
+
+    const shortDate = new Date(task.due).toLocaleDateString("en", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      timeZone: "GMT",
+    });
+
+    return (
+      <div className="list-tasks" key={task.id}>
+        {dateDiff < 0 ? `Overdue!` : `Due in ${dateDiff} days`}
+        <small>
+          {weekDay} {shortDate}
+        </small>
+        <div className="task-body">
+          {isEdit ? (
+            <form onSubmit={handleEditTask}>
+              <input
+                placeholder={task.body}
+                onChange={(e) => setModTask(e.target.value)}
+              ></input>
+              <button type="submit">Save</button>
+            </form>
+          ) : (
+            <p>{task.body}</p>
+          )}
+
+          <span>
+            <button value={task.id} onClick={handleDeleteClick}>
+              🗑️
+            </button>
+            <button value={task.id} onClick={handleEditMode}>
+              ✏️
+            </button>
+          </span>
+        </div>
+      </div>
+    );
+  });
 
   return (
     <div className="task-list">
